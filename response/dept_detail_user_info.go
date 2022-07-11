@@ -18,21 +18,19 @@ package response
 
 type DeptDetailUserInfo struct {
 	Response
-	deptDetailUserInfoPage `json:"result"`
+	Page struct {
+		// 是否还有更多的数据
+		HasMore bool `json:"has_more"`
+
+		// 下一次分页的游标，如果has_more为false，表示没有更多的分页数据。
+		NextCursor int `json:"next_cursor"`
+
+		List []DeptUser `json:"list"`
+	} `json:"result"`
 }
 
-type deptDetailUserInfoPage struct {
-	// 是否还有更多的数据
-	HasMore bool `json:"has_more"`
-
-	// 下一次分页的游标，如果has_more为false，表示没有更多的分页数据。
-	NextCursor int `json:"next_cursor"`
-
-	DeptDetailUsers []deptDetailUserInfo `json:"list"`
-}
-
-// deptDetailUserInfo 部门用户详情
-type deptDetailUserInfo struct {
+// DeptUser 部门用户详情
+type DeptUser struct {
 	UserId string `json:"userid"`
 
 	// 员工在当前开发者企业账号范围内的唯一标识
@@ -111,4 +109,18 @@ type deptDetailUserInfo struct {
 	//
 	//dingtalk：钉钉自建专属帐号
 	ExclusiveAccountType string `json:"exclusive_account_type"`
+
+	//员工的企业邮箱
+	//
+	//如果员工的企业邮箱没有开通，返回信息中不包含该数据
+	OrgEmail string `json:"org_email"`
+
+	//员工邮箱
+	//
+	//企业内部应用如果没有返回该字段，需要检查当前应用通讯录权限中邮箱等个人信息权限是否开启
+	//
+	//员工信息面板中有邮箱字段值才返回该字段
+	//
+	//第三方企业应用不返回该参数
+	Email string `json:"email"`
 }
